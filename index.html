@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scripts</title>
+
+<style>
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: Arial, sans-serif;
+    color: white;
+    background: linear-gradient(270deg, #6a00ff, #00c3ff, #6a00ff);
+    background-size: 600% 600%;
+    animation: fondoAnimado 10s ease infinite;
+}
+
+@keyframes fondoAnimado {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.container {
+    max-width: 400px;
+    margin: auto;
+    text-align: center;
+    padding-top: 40px;
+}
+
+.live-bar {
+    font-size: 12px;
+    margin-bottom: 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    background: rgba(0,0,0,0.3);
+}
+
+.dot {
+    width: 6px;
+    height: 6px;
+    background: #00ff88;
+    border-radius: 50%;
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    50% { opacity: 0.3; }
+}
+
+.titulo {
+    font-size: 45px;
+    letter-spacing: 6px;
+    text-shadow: 0 0 10px #fff, 0 0 25px #00c3ff;
+}
+
+.select-box {
+    width: 90%;
+    margin: auto;
+    border-radius: 15px;
+    padding: 2px;
+    background: linear-gradient(135deg, #6a00ff, #00c3ff);
+}
+
+select {
+    width: 100%;
+    padding: 14px;
+    border-radius: 15px;
+    border: none;
+    background: #0d0d1a;
+    color: white;
+}
+
+button {
+    padding: 14px 30px;
+    border-radius: 15px;
+    border: none;
+    background: linear-gradient(135deg, #6a00ff, #00c3ff);
+    color: white;
+    margin: 8px;
+    cursor: pointer;
+}
+
+#copiarBtn {
+    display: none;
+}
+
+#resultado {
+    margin-top: 20px;
+    background: rgba(0,0,0,0.4);
+    padding: 15px;
+    border-radius: 15px;
+    font-size: 13px;
+    word-break: break-all;
+}
+
+.loading-box {
+    margin-top: 20px;
+    display: none;
+}
+
+.loading-bar {
+    width: 100%;
+    height: 10px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.loading-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #00c3ff, #6a00ff);
+}
+
+.loading-text {
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.features {
+    margin-top: 30px;
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+.row {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 8px;
+}
+
+.discord {
+    margin-top: 30px;
+    font-size: 12px;
+}
+
+.discord a {
+    display: inline-block;
+    margin-top: 5px;
+    padding: 8px 15px;
+    border-radius: 20px;
+    background: rgba(0,0,0,0.4);
+    color: #00c3ff;
+    text-decoration: none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="live-bar">
+    <span class="dot"></span>
+    LIVE · Script Generator · <span id="online">214</span> online
+</div>
+
+<h1 class="titulo">SCRIPTS</h1>
+
+<div class="select-box">
+<select id="selector">
+<option value="">Seleccionar script</option>
+<option value="envy">ENVY HUB</option>
+<option value="nova">Nova Hub</option>
+<option value="semi">Semi TP</option>
+<option value="lucky">Lucky OG</option>
+<option value="kawatan">illusion x kawatan</option>
+</select>
+</div>
+
+<br>
+
+<button onclick="generar()">GENERAR</button>
+<button id="copiarBtn" onclick="copiar()">COPIAR</button>
+
+<div id="resultado"></div>
+
+<div class="loading-box" id="loadingBox">
+    <div class="loading-bar">
+        <div class="loading-fill" id="loadingFill"></div>
+    </div>
+    <div class="loading-text" id="loadingText">0%</div>
+</div>
+
+<div class="features">
+    <div class="row">
+        <div>⚡ Instant generation</div>
+        <div>🔒 Secure proxied webhook</div>
+    </div>
+
+    <div class="row">
+        <div>🎯 Precise target selection</div>
+    </div>
+</div>
+
+<div class="discord">
+    acriptts <br>
+    <a href="https://discord.gg/wJq8pWkPCX" target="_blank">Unirse al Discord</a>
+</div>
+
+</div>
+
+<script>
+let scriptActual = "";
+
+setInterval(() => {
+    document.getElementById("online").innerText =
+        200 + Math.floor(Math.random() * 30);
+}, 3000);
+
+function generar() {
+
+    let valor = document.getElementById("selector").value;
+    let resultado = document.getElementById("resultado");
+    let copiarBtn = document.getElementById("copiarBtn");
+    let fill = document.getElementById("loadingFill");
+    let text = document.getElementById("loadingText");
+    let box = document.getElementById("loadingBox");
+
+    resultado.innerText = "";
+    copiarBtn.style.display = "none";
+    box.style.display = "block";
+
+    fill.style.width = "0%";
+
+    let progreso = 0;
+
+    let interval = setInterval(() => {
+
+        progreso++;
+
+        fill.style.width = progreso + "%";
+        text.innerText = progreso + "%";
+
+        if (progreso >= 100) {
+
+            clearInterval(interval);
+
+            if (valor === "envy") {
+                scriptActual =
+                'loadstring(game:HttpGet("https://pastefy.app/QGNCRDIT/raw",true))()';
+
+            } else if (valor === "nova") {
+                scriptActual =
+                'loadstring(game:HttpGet("https://pastefy.app/nZOET2E3/raw",true))()';
+
+            } else if (valor === "semi") {
+                scriptActual =
+                'loadstring(game:HttpGet("https://pastefy.app/4A4NsTuM/raw",true))()';
+
+            } else if (valor === "lucky") {
+                scriptActual =
+                'loadstring(game:HttpGet("https://pastefy.app/guKp3YyN/raw",true))()';
+
+            } else if (valor === "kawatan") {
+                scriptActual =
+                'loadstring(game:HttpGet("https://pastefy.app/FUIuraem/raw",true))()';
+            }
+
+            resultado.innerText = scriptActual;
+
+            copiarBtn.style.display = "inline-block";
+
+            box.style.display = "none";
+        }
+
+    }, 30);
+}
+
+function copiar() {
+    navigator.clipboard.writeText(scriptActual);
+}
+</script>
+
+</body>
+</html>
